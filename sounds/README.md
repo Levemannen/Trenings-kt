@@ -1,11 +1,15 @@
-Legg egne timerlyder i denne mappen hvis du vil bruke ekte lydfiler.
+﻿# TreningsBuddy-lyder
 
-Filnavn appen prøver å spille av først:
+Disse filene brukes av lydvarsler under aktiv trening. Appen faller tilbake til syntetiske Web Audio-lyder hvis en lydfil ikke kan spilles.
 
-- work-start.mp3
-- rest-start.mp3
-- countdown.mp3
-- workout-complete.mp3
-- warning.mp3
+Filer:
+- treningsbuddy-work.mp3
+- treningsbuddy-rest.mp3
+- treningsbuddy-countdown.mp3
+- treningsbuddy-complete.mp3
 
-Hvis en fil mangler eller ikke kan spilles av, bruker Treningsbuddy automatisk en mykere innebygd Web Audio-lyd.
+Kilder:
+- Short Beep, Wikimedia Commons: https://commons.wikimedia.org/wiki/File:Short_Beep.ogg
+- Simple Happy Beep, Wikimedia Commons: https://commons.wikimedia.org/wiki/File:Simple_Happy_Beep.ogg
+
+Lydfilene er hentet fra Wikimedia Commons sine transkodede MP3-versjoner. Behold denne README-filen som enkel kilde-/lisensnotis.
