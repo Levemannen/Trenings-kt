@@ -380,3 +380,27 @@ body.lightMode .backPrompt { background:#fff; }
 .readonlyExercise div{display:grid;gap:3px;min-width:0}.readonlyExercise strong{overflow-wrap:anywhere}.readonlyExercise small{color:var(--muted)}
 .previewActions{margin-top:4px}.previewActions .primary,.previewActions .secondary{min-height:48px}
 @media(max-width:700px){.historyHeader{align-items:flex-start;flex-direction:column}.historyViews{width:100%}.historyViews .chip{flex:1}.personalRecordsGrid{grid-template-columns:1fr}.recordMetrics{gap:8px}}
+
+.timerHeader{margin-bottom:12px}
+.standaloneTimer{max-width:680px;margin:0 auto;display:grid;gap:18px;text-align:center;padding:clamp(18px,5vw,32px)}
+.timerModeTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.timerModeTabs .chip{min-height:44px}
+.standalonePhase{color:var(--muted);font-size:.88rem;font-weight:900;letter-spacing:.18em}
+.standalonePhase.work{color:var(--accent)}
+.standalonePhase.rest{color:#75c8ff}
+.standaloneClock{font-variant-numeric:tabular-nums;font-size:clamp(4.5rem,22vw,8.5rem);font-weight:950;line-height:.9;letter-spacing:-.065em;color:var(--text);text-shadow:0 10px 36px rgba(0,0,0,.28)}
+.standaloneClock.running{color:var(--accent)}
+.standaloneRound{margin-top:-8px;color:var(--muted);font-size:1.05rem;font-weight:800}
+.timerMainActions{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+.timerMainActions button{min-height:54px;font-size:1rem}
+.timerSetup{display:grid;gap:12px;padding-top:18px;border-top:1px solid var(--line);text-align:left}
+.timerSetup h3{font-size:1rem}
+.timerPresets{display:flex;flex-wrap:wrap;gap:8px}
+.timerPresets .chip{flex:1;min-width:72px;min-height:42px}
+.timerCustom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)) auto;align-items:end;gap:10px}
+.timerCustom.intervalCustom{grid-template-columns:repeat(3,minmax(0,1fr)) auto}
+.timerCustom label{display:grid;gap:6px;color:var(--muted);font-size:.78rem;font-weight:750}
+.timerCustom input{width:100%;min-height:44px;text-align:center;font-size:1rem}
+.timerCustom button{min-height:44px}
+body.lightMode .standaloneClock{text-shadow:none}
+@media(max-width:560px){.timerCustom,.timerCustom.intervalCustom{grid-template-columns:repeat(2,minmax(0,1fr))}.timerCustom button{grid-column:1/-1}.standaloneTimer{gap:16px}.timerMainActions{grid-template-columns:1fr 1fr}}
