@@ -4,7 +4,7 @@
   <body>
     <p>Oppdaterer Treningsbuddy...</p>
     <script>
-      const continueToApp = () => location.replace("./?v=176&updated=1");
+      const continueToApp = () => location.replace("./?v=177&updated=1");
       const fallback = setTimeout(continueToApp, 1500);
       Promise.allSettled([
         navigator.serviceWorker ? navigator.serviceWorker.getRegistrations().then(items => Promise.allSettled(items.map(item => item.unregister()))) : Promise.resolve(),
