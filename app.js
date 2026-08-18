@@ -1,4 +1,6 @@
 ﻿const APP_VERSION = "177";
+const WorkoutCategories = window.TreningsbuddyWorkoutCategories;
+if(!WorkoutCategories)throw new Error("Felles kategoridefinisjon kunne ikke lastes.");
 const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],["settings","Innstillinger"]];
       const favorites = ["Deadlift","Landmine Press","Stangroing","Frontbøy","Floor Press","Inverted Rows","Pushups","Push Press","Shrugs","Bicepscurl","Triceps Extension","Planke/Rollout"];
       const equipment = ["Kroppsvekt","Manualer","Stang","Kabel","Maskin","Kettlebell","Strikk","TRX/slynger","Smith-maskin","Landmine","Medisinball","Annet","Benk","Pullupstang"];
@@ -280,13 +282,12 @@ const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],
       const spark = points => `<div class="spark">${points.length?points.map(p=>`<span style="height:${Math.max(18,p/Math.max(...points)*100)}%"></span>`).join(""):""}</div>`;
       const suggestion = e => { const last=lastEntries(e.name)[0]; return last?`Sist brukt: ${new Date(last.date).toLocaleDateString("no")} · ${format(last)}`:"Fokuser på god teknikk og jevn flyt."; };
       const poolFor = cat => [...new Set(Object.values(groups[cat==="tabata"?"kroppsvekt":cat]||{}).flat().concat(templates.filter(t=>t.cat===(cat==="tabata"?"kroppsvekt":cat)).flatMap(t=>t.ex.map(x=>x[0]))))].sort((a,b)=>a.localeCompare(b,"no"));
-      const categoryOptions = [["push","Push"],["pull","Pull"],["fullbody","Fullbody"],["crosstrening","Cross"],["kroppsvekt","Kroppsvekt"],["morgen","Morgentrening"],["toying","Tøying"],["core","Core"]];
-      const flowOptions = [["push","Push"],["pull","Pull"],["fullbody","Fullbody"],["crosstrening","Cross"],["kroppsvekt","Kroppsvekt"],["tabata","Tabata"],["core","Core"],["morgen","Morgentrening"],["toying","Tøying"],["nodokt","Nødøkt"]];
+      const flowOptions = WorkoutCategories.categories.map(({id,label})=>[id,label]);
       const intervalCategories = ["core","tabata","kroppsvekt","crosstrening","morgen","toying","nodokt"];
       const hasIntervalTimer = cat => intervalCategories.includes(cat);
       const usesIntervalTimer = (cat,choice=state.timerChoice) => hasIntervalTimer(cat)||choice==="interval"||choice==="tabata";
       const timerDefaults = cat => cat==="tabata"?{work:20,pause:10,rounds:8}:cat==="toying"?{work:45,pause:10,rounds:1}:{work:40,pause:20,rounds:3};
-      const flowLabel = id => (flowOptions.find(x=>x[0]===id)||categoryOptions.find(x=>x[0]===id)||["","Egen"])[1];
+      const flowLabel = id => WorkoutCategories.labelFor(id);
       const setFlowCategory = cat => { const defaults=timerDefaults(cat);state.builderPickCat=cat; state.builderCat=cat; state.builderName=`Ny ${flowLabel(cat)}-økt`; state.builder=[]; state.builderSearch=""; state.builderMuscle=""; state.builderEquipment=""; state.builderLevel=""; state.showRandomOptions=false; state.showBuilderFilters=false; state.commonSetCount=cat==="toying"?1:3; state.builderStep="exercises"; state.builderOrigin=null; state.timerChoice=cat==="tabata"?"tabata":hasIntervalTimer(cat)?"interval":"none";if(hasIntervalTimer(cat)){state.globalWork=defaults.work;state.globalPause=defaults.pause;state.globalRounds=defaults.rounds;} save(); render(); };
       const startNewWorkoutFlow = () => { state.builder=[]; state.builderName="Ny økt"; state.builderSearch=""; state.builderMuscle=""; state.builderEquipment=""; state.builderLevel=""; state.showRandomOptions=false; state.showBuilderFilters=false; state.commonSetCount=3; state.builderStep="category"; state.builderMode="build"; state.builderOrigin=null; state.tab="builder"; state.justAdded=""; state.editingProgramId=null; save(); render(); };
       const openWorkoutInEditor = (program,{copy=false,originTab="home"}={}) => {
@@ -303,35 +304,16 @@ const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],
       const templateProgram = t => {const timerChoice=t.cat==="tabata"?"tabata":hasIntervalTimer(t.cat)?"interval":"none";const work=t.cat==="tabata"?20:t.cat==="toying"?45:40;const pause=t.cat==="tabata"?10:10;const rounds=t.cat==="tabata"?8:t.cat==="toying"?1:3;return {id:crypto.randomUUID(),sourceTemplateId:t.id,name:t.name,cat:t.cat,ex:t.ex.map(x=>({...entry(x[0],Number(x[1])||3,x[2]||""),work,pause,rounds})),timerChoice,pauseBetween:0,duration:t.duration,date:new Date().toISOString()};};
       const toggleTemplateFavorite = id => {state.favoriteTemplates=state.favoriteTemplates||[];state.savedPrograms=state.savedPrograms||[];const exists=state.favoriteTemplates.includes(id),t=templates.find(x=>x.id===id);if(exists){state.favoriteTemplates=state.favoriteTemplates.filter(x=>x!==id);state.savedPrograms=state.savedPrograms.filter(x=>x.sourceTemplateId!==id);}else if(t){state.favoriteTemplates.push(id);if(!state.savedPrograms.some(x=>x.sourceTemplateId===id))state.savedPrograms.unshift(templateProgram(t));}save();render();};
       const migrateTemplateFavorites = () => {(state.favoriteTemplates||[]).forEach(id=>{const t=templates.find(x=>x.id===id);if(t&&!state.savedPrograms.some(x=>x.sourceTemplateId===id))state.savedPrograms.push(templateProgram(t));});save();};
-      const inferWorkoutCategory = p => {
-        const aliases={cross:"crosstrening",crosstrening:"crosstrening",bodyweight:"kroppsvekt",kroppsvekt:"kroppsvekt",yoga:"toying",tøying:"toying",toying:"toying",morgen:"morgen",nodokt:"nodokt",nødøkt:"nodokt"};
-        const raw=String(p.cat||"").toLowerCase();
-        const mapped=aliases[raw]||raw;
-        if(flowOptions.some(([id])=>id===mapped)&&!['favoritt','favoritter'].includes(mapped))return mapped;
-        const text=`${p.name||""} ${p.timerChoice||""}`.toLowerCase();
-        if(text.includes("tabata"))return "tabata";
-        if(text.includes("push"))return "push";
-        if(text.includes("pull"))return "pull";
-        if(text.includes("core")||text.includes("kjerne"))return "core";
-        if(text.includes("cross"))return "crosstrening";
-        if(text.includes("kroppsvekt")||text.includes("bodyweight"))return "kroppsvekt";
-        if(text.includes("morgen"))return "morgen";
-        if(text.includes("tøy")||text.includes("yoga")||text.includes("mobilitet"))return "toying";
-        if(text.includes("nød"))return "nodokt";
-        if(text.includes("fullbody")||text.includes("helkropp"))return "fullbody";
-        const names=(p.ex||[]).map(e=>e.name||e[0]).filter(Boolean);
-        const candidates=flowOptions.map(([id])=>id).filter(id=>!['tabata','nodokt'].includes(id));
-        const scores=candidates.map(id=>[id,names.filter(name=>Object.values(groups[id]||{}).flat().includes(name)).length]);
-        scores.sort((a,b)=>b[1]-a[1]);
-        return scores[0]?.[1]>0?scores[0][0]:"fullbody";
-      };
+      const inferWorkoutCategory = p => WorkoutCategories.categoryOf(p,builtInTemplates)||"fullbody";
+      const normalizeFavoritePrograms = () => {state.savedPrograms=(state.savedPrograms||[]).map(p=>({...p,cat:inferWorkoutCategory(p)}));};
       const migrateFavoriteWorkoutStructure = () => {
-        if(state.favoriteWorkoutSchema===2)return;
-        const backupKey=`${storeKey}-pre-favorite-v2`;
+        if(state.favoriteWorkoutSchema===3)return;
+        const backupKey=`${storeKey}-pre-favorite-v3`;
         if(!localStorage.getItem(backupKey))localStorage.setItem(backupKey,JSON.stringify(state.savedPrograms||[]));
         const seen=new Set();
-        state.savedPrograms=(state.savedPrograms||[]).map(p=>({...p,cat:inferWorkoutCategory(p)})).filter(p=>{const exercises=(p.ex||[]).map(e=>e.name||e[0]).join("|");const key=p.sourceTemplateId?`template:${p.sourceTemplateId}`:`${String(p.name||"").trim().toLowerCase()}|${p.cat}|${exercises}|${p.timerChoice||"none"}`;if(seen.has(key))return false;seen.add(key);return true;});
-        state.favoriteWorkoutSchema=2;
+        normalizeFavoritePrograms();
+        state.savedPrograms=state.savedPrograms.filter(p=>{const exercises=(p.ex||[]).map(e=>e.name||e[0]).join("|");const key=p.sourceTemplateId?`template:${p.sourceTemplateId}`:`${String(p.name||"").trim().toLowerCase()}|${p.cat}|${exercises}|${p.timerChoice||"none"}`;if(seen.has(key))return false;seen.add(key);return true;});
+        state.favoriteWorkoutSchema=3;
         save();
       };
       const templateStats = t => {
@@ -478,7 +460,7 @@ const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],
         applyTimerToBuilder();
         state.savedPrograms=state.savedPrograms||[];
         const name=(state.builderName||"Favorittøkt").trim();
-        const cat=state.builderCat||state.builderPickCat;
+        const cat=WorkoutCategories.normalizeCategory(state.builderCat||state.builderPickCat)||"fullbody";
         const existingIndex=state.savedPrograms.findIndex(p=>p.id===state.editingProgramId||(p.name||"").trim().toLowerCase()===name.toLowerCase()&&p.cat===cat);
         const workout={id:existingIndex>=0?state.savedPrograms[existingIndex].id:crypto.randomUUID(),name,cat,ex:state.builder.map(e=>({...e})),timerChoice:state.timerChoice||"none",globalWork:state.globalWork,globalPause:state.globalPause,globalRounds:state.globalRounds,pauseBetween:state.pauseBetween||0,date:new Date().toISOString()};
         if(existingIndex>=0)state.savedPrograms.splice(existingIndex,1,workout);else state.savedPrograms.unshift(workout);
@@ -742,7 +724,7 @@ const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],
         try{
           const payload=JSON.parse(await file.text());if(payload?.format!=="treningsbuddy-backup"||!payload.data||!Array.isArray(payload.data.history)||typeof payload.data.personalRecords!=="object")throw new Error("invalid");
           if(!confirm("Import erstatter favoritter, historikk, personlige rekorder og innstillinger med innholdet i sikkerhetskopien. Fortsette?"))return;
-          const data=payload.data,favorites=data.favorites||{};state.savedPrograms=Array.isArray(favorites.savedPrograms)?favorites.savedPrograms:[];state.removedFavorites=Array.isArray(favorites.removedFavorites)?favorites.removedFavorites:[];state.favoriteTemplates=Array.isArray(favorites.favoriteTemplates)?favorites.favoriteTemplates:[];state.sessions=data.history;state.personalRecords=data.personalRecords||{};Object.entries(data.settings||{}).forEach(([key,value])=>{if(backupSettingKeys.includes(key))state[key]=value;});state.personalRecordsBackfilledV149=false;state.backupNotice="Sikkerhetskopien er importert.";save();render();
+          const data=payload.data,favorites=data.favorites||{};state.savedPrograms=Array.isArray(favorites.savedPrograms)?favorites.savedPrograms:[];normalizeFavoritePrograms();state.removedFavorites=Array.isArray(favorites.removedFavorites)?favorites.removedFavorites:[];state.favoriteTemplates=Array.isArray(favorites.favoriteTemplates)?favorites.favoriteTemplates:[];state.sessions=data.history;state.personalRecords=data.personalRecords||{};Object.entries(data.settings||{}).forEach(([key,value])=>{if(backupSettingKeys.includes(key))state[key]=value;});state.personalRecordsBackfilledV149=false;state.backupNotice="Sikkerhetskopien er importert.";save();render();
         }catch(_){state.backupNotice="Filen kunne ikke importeres. Velg en gyldig TreningsBuddy-sikkerhetskopi.";save();render();}
       };
       function renderSettings() {
