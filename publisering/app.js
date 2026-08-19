@@ -1,4 +1,4 @@
-﻿const APP_VERSION = "179";
+﻿const APP_VERSION = "180";
 const WorkoutCategories = window.TreningsbuddyWorkoutCategories;
 if(!WorkoutCategories)throw new Error("Felles kategoridefinisjon kunne ikke lastes.");
 const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],["settings","Innstillinger"]];
@@ -695,7 +695,7 @@ const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],
       const templateTimerChoice = t => t.cat==="tabata"?"tabata":hasIntervalTimer(t.cat)?"interval":t.timerChoice||"none";
       const templateToEntries = t => {const defaults=timerDefaults(t.cat),choice=templateTimerChoice(t);return t.ex.map(x=>{const e=entry(x[0],Number(x[1])|| (t.cat==="toying"?1:3),x[2]||"");if(choice!=="none")Object.assign(e,{mode:"intervall",work:t.work||defaults.work,pause:t.pause??defaults.pause,rounds:t.preserveSets?(Number(x[1])||1):(t.rounds||defaults.rounds)});return e;});};
       const templateAsProgram = t => {const defaults=timerDefaults(t.cat);return {id:crypto.randomUUID(),sourceTemplateId:t.id,name:t.name,cat:t.cat,ex:templateToEntries(t),timerChoice:templateTimerChoice(t),globalWork:t.work||defaults.work,globalPause:t.pause??defaults.pause,globalRounds:t.rounds||defaults.rounds,pauseBetween:0,duration:t.duration,date:new Date().toISOString()};};
-      const templateToFavorite = (t,edit=false) => {const program=templateAsProgram(t);if(edit){openWorkoutInEditor(program,{copy:true,originTab:"templates"});return;}state.savedPrograms=state.savedPrograms||[];let existing=state.savedPrograms.find(p=>p.sourceTemplateId===t.id);if(!existing){existing=program;state.savedPrograms.unshift(existing);save();}state.templateNotice=`${existing.name} ligger nå under Favorittøkt.`;render();};
+      const templateToFavorite = (t,edit=false) => {const program=templateAsProgram(t);if(edit){openWorkoutInEditor(program,{copy:true,originTab:"templates"});return;}state.savedPrograms=state.savedPrograms||[];const existingIndex=state.savedPrograms.findIndex(p=>p.sourceTemplateId===t.id);if(existingIndex>=0){program.id=state.savedPrograms[existingIndex].id;state.savedPrograms.splice(existingIndex,1,program);}else state.savedPrograms.unshift(program);const saved=save();state.templateNotice=saved?`${program.name} ligger nå under Favorittøkter → ${flowLabel(program.cat)}.`:`${program.name} kunne ikke lagres. Prøv igjen.`;render();};
       function renderWorkoutTemplates() {
         if(!state.templateCategory){
           renderTrainingCategorySelection({title:"Maler",categories:flowOptions.map(([id,title])=>{const count=builtInTemplates.filter(t=>t.cat===id).length;return {id,title,subtitle:count?`${count} ${count===1?"mal":"maler"}`:"Ingen maler",onClick:()=>{state.templateCategory=id;state.templateNotice="";save();render();}};})});
