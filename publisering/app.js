@@ -1,4 +1,4 @@
-﻿const APP_VERSION = "178";
+﻿const APP_VERSION = "179";
 const WorkoutCategories = window.TreningsbuddyWorkoutCategories;
 if(!WorkoutCategories)throw new Error("Felles kategoridefinisjon kunne ikke lastes.");
 const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],["settings","Innstillinger"]];
@@ -182,7 +182,7 @@ const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],
       state.removedFavorites = state.removedFavorites || [];
       state.exerciseVideos = state.exerciseVideos || {};
       state.youtubeSearches = state.youtubeSearches || {};
-      if (!state.homeFlowReady && state.tab!=="builder") state.tab = "home";
+      if (!(state.tab==="builder"&&['active','paused'].includes(state.builderMode))) state.tab = "home";
       state.homeFlowReady = true;
       state.builderPickCat = state.builderPickCat || "push";
       state.builderSearch = state.builderSearch || "";
