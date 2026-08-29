@@ -274,6 +274,12 @@ body.lightMode .guidedPreview span,body.lightMode .completionStats span { backgr
 @media (max-width:380px) { .selectedExerciseMain { grid-template-columns:1fr; } .selectedExerciseMain .setCountControls { justify-content:flex-start; } }
 
 .compactTemplateCard { align-content:start; }
+.swipeHint { margin:-5px 0 9px; color:var(--muted); font-size:12px; font-weight:800; }
+@media (max-width:759px) {
+  .workoutSwipeCards { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding:12px; overscroll-behavior-x:contain; scrollbar-width:none; margin:0 -12px; padding:0 12px 12px; }
+  .workoutSwipeCards::-webkit-scrollbar { display:none; }
+  .workoutSwipeCards > .panel { flex:0 0 calc(100vw - 24px); width:calc(100vw - 24px); max-width:560px; scroll-snap-align:center; scroll-snap-stop:always; }
+}
 .templateMeta { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .templateExerciseDetails { border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:8px 0; }
 .templateExerciseDetails summary { color:var(--accent); font-weight:900; cursor:pointer; list-style-position:inside; }
