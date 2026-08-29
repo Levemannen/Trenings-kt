@@ -1,4 +1,4 @@
-﻿const APP_VERSION = "181";
+﻿const APP_VERSION = "182";
 const WorkoutCategories = window.TreningsbuddyWorkoutCategories;
 if(!WorkoutCategories)throw new Error("Felles kategoridefinisjon kunne ikke lastes.");
 const tabs = [["bank","Øvelser"],["templates","Maler"],["history","Historikk"],["settings","Innstillinger"]];
