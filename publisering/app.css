@@ -380,6 +380,14 @@ body.lightMode .backPrompt { background:#fff; }
 .recordMetrics span{display:grid;gap:3px;padding:10px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--panel) 82%,transparent)}
 .recordMetrics small{color:var(--muted);font-size:.78rem}
 .recordMetrics strong{font-size:.96rem}
+.deleteRecordAction{justify-self:start;min-height:36px;padding:7px 11px;font-size:.78rem}
+.exerciseHistoryStrip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,3vw,18px);margin:-4px 0 2px;padding:0 2px}
+.exerciseHistoryStrip span{display:grid;gap:2px;min-width:0}
+.exerciseHistoryStrip small,.exerciseHistoryEmpty{color:var(--muted);font-size:.72rem;font-weight:750;line-height:1.2}
+.exerciseHistoryStrip strong{min-width:0;font-size:.9rem;font-weight:850;line-height:1.25;white-space:nowrap;font-variant-numeric:tabular-nums}
+.exerciseHistoryEmpty{margin:-3px 2px 2px}
+.minimalFocus .exerciseHistoryStrip{width:100%;text-align:left}
+@media(max-width:360px){.exerciseHistoryStrip{gap:6px}.exerciseHistoryStrip strong{font-size:.78rem}.exerciseHistoryStrip small{font-size:.66rem}}
 .aboutSettings .settingRow{align-items:flex-start}
 .aboutSettings .settingRow strong{max-width:62%;text-align:right;font-size:.92rem}
 .setLogError{margin:0;color:#ff9b94;font-weight:700;font-size:.88rem}
