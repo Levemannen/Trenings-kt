@@ -222,6 +222,18 @@
       .prNotice { border:1px solid rgba(152,200,48,.5); border-radius:8px; background:rgba(152,200,48,.1); color:var(--accent); padding:10px; font-weight:1000; }
       .historyExercise { display:grid; gap:0; }
       .historySetLogs { display:grid; gap:5px; margin:-1px 8px 0; border:1px solid var(--line); border-top:0; border-radius:0 0 8px 8px; background:rgba(152,200,48,.04); padding:9px 11px; color:var(--muted); font-size:12px; font-weight:750; }
+      .historySetEntry { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; }
+      .historyDeleteIcon,.recordDeleteIcon { display:inline-grid; place-items:center; width:28px; height:28px; flex:0 0 28px; padding:0; border:1px solid transparent; border-radius:50%; background:transparent; color:var(--muted); font-size:17px; line-height:1; }
+      .historyDeleteIcon:hover,.historyDeleteIcon:focus-visible,.recordDeleteIcon:hover,.recordDeleteIcon:focus-visible { color:#ffb4ac; border-color:rgba(255,120,105,.42); outline:0; }
+      .recordDeleteIcon { width:22px; height:22px; margin-left:3px; vertical-align:middle; font-size:14px; }
+      .deleteEntryOverlay { position:fixed; inset:0; z-index:2500; display:grid; place-items:center; padding:20px; background:rgba(2,5,7,.78); backdrop-filter:blur(8px); }
+      .deleteEntryDialog { width:min(100%,390px); display:grid; gap:10px; padding:20px; border:1px solid var(--line); border-radius:10px; background:var(--panel); box-shadow:0 24px 70px rgba(0,0,0,.55); }
+      .deleteEntryDialog h2 { font-size:21px; }
+      .deleteEntryDialog p { color:var(--muted); }
+      .deleteEntryDialog div { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px; }
+      .deleteEntryDialog button { min-height:46px; }
+      .dangerDelete { color:#fff; background:#b83a35; border-color:#d75a54; }
+      body.lightMode .deleteEntryDialog { background:#fff; }
       .prBadge { display:inline-flex; align-items:center; min-height:20px; margin-left:5px; border-radius:999px; background:var(--accent); color:var(--ink); padding:2px 7px; font-size:10px; font-weight:1000; }
       .minimalFocus { place-content:center; text-align:center; }
       .minimalFocus .focusCue { display:grid; gap:6px; border:1px solid var(--line); border-radius:8px; padding:12px; background:rgba(255,255,255,.035); }

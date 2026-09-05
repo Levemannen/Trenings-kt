@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "treningsbuddy-flat-v194";
+﻿const CACHE_NAME = "treningsbuddy-flat-v195";
 const APP_SHELL = ["./", "./index.html", "./app.css", "./workout-categories.js", "./description-loader.js", "./exerciseDescriptions.json", "./app.js", "./assets/icons/treningsbuddy-favicon-32.png", "./assets/icons/treningsbuddy-apple-touch-icon.png", "./assets/icons/treningsbuddy-pwa-icon-192.png", "./assets/icons/treningsbuddy-pwa-icon-512.png", "./assets/icons/treningsbuddy-pwa-maskable-192.png", "./assets/icons/treningsbuddy-pwa-maskable-512.png", "./assets/logos/treningsbuddy-home-logo.png", "./sounds/treningsbuddy-work.mp3", "./sounds/treningsbuddy-rest.mp3", "./sounds/treningsbuddy-complete.mp3", "./sounds/treningsbuddy-countdown.mp3", "./manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
