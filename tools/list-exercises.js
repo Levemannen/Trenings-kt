@@ -1,8 +1,10 @@
 const fs = require("fs");
 const vm = require("vm");
 
+require("../exercise-registry.js");
 global.window = {
   TreningsbuddyWorkoutCategories: require("../workout-categories.js"),
+  TreningsbuddyExerciseRegistry: global.TreningsbuddyExerciseRegistry,
 };
 global.document = { addEventListener: (_event, callback) => callback() };
 
